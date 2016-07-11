@@ -1,0 +1,1 @@
+/Users/apple/Desktop/LezzGo2/Build/Intermediates/ArchiveIntermediates/LezzGo2/InstallationBuildProductsLocation/Applications/LezzGo2.app
