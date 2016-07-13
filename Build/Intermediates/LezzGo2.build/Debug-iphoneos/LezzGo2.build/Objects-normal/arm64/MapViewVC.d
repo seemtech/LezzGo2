@@ -2,9 +2,9 @@ dependencies: /Users/apple/Desktop/LezzGo2/LezzGo2/MapViewVC.m \
   /Users/apple/Desktop/LezzGo2/LezzGo2/MapViewVC.h \
   /Users/apple/Desktop/LezzGo2/VPPMapHelperDelegate.h \
   /Users/apple/Desktop/LezzGo2/VPPMapHelper.h \
-  /Users/apple/Desktop/LezzGo2/MSMenuView.h \
   /Users/apple/Desktop/LezzGo2/LezzGo2/AppDelegate.h \
   /Users/apple/Desktop/LezzGo2/LocationManager.h \
+  /Users/apple/Desktop/LezzGo2/MSMenuView.h \
   /Users/apple/Desktop/LezzGo2/REFrostedViewController.h \
   /Users/apple/Desktop/LezzGo2/UIViewController+REFrostedViewController.h \
   /Users/apple/Desktop/LezzGo2/MapAnnotationExample.h \

@@ -15,7 +15,13 @@
 #import "SettingsVC.h"
 #import "ViewController.h"
 #import "SDWebImageManager.h"
-
+#import "WebServices.h"
+#import "AFNetworking.h"
+#import "SVProgressHUD.h"
+#import "FinalSignupVC.h"
+#import "SDWebImageManager.h"
+#import "AboutAppVC.h"
+#import "EditAccountVC.h"
 @interface DEMOMenuViewController ()
 
 @end
@@ -59,6 +65,32 @@
         [view addSubview:label];
         view;
     });
+}
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    
+    NSString *buttonTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
+    
+    if ([buttonTitle isEqualToString:@"Logout"])
+    {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"ArrayInfo"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        [self LogoutApi];
+    }
+    
+    
+}
+-(void)logoutmethod
+
+{
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"You really want to logout?"
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Cancel"
+                                               destructiveButtonTitle:@"Logout"
+                                                    otherButtonTitles:nil];
+    
+    [actionSheet showInView:self.view];
 }
 -(void)loadimage
 {
@@ -147,20 +179,71 @@
        [self.frostedViewController hideMenuViewController];
    }
    else if ( indexPath.row == 3) {
-       [[NSUserDefaults standardUserDefaults] setValue:@"Logout"  forKey:@"LoginOrLogout"];
-       
-       [[NSUserDefaults standardUserDefaults] setValue:@"" forKey:@"ArrayInfo"];
-       [[NSUserDefaults standardUserDefaults] synchronize];
-       [self.frostedViewController hideMenuViewController];
 
-       ViewController *Newnavigationvc = [self.storyboard instantiateViewControllerWithIdentifier:@"ViewController"];
-       navigationController.modalTransitionStyle=UIModalTransitionStyleCrossDissolve;
-       [self presentViewController:Newnavigationvc animated:YES completion:nil];
-       
+       [self logoutmethod];
        
    }
   
 
+}
+-(void)LogoutApi
+{
+    delegate=(AppDelegate *)[[UIApplication sharedApplication]delegate];
+    NSString *userid=[delegate.logininfo_Array valueForKey:@"user_id"];
+    
+    NSDictionary *params;
+    
+    params = @{@"action":@"logout",@"user_id":userid,@"device_id":delegate.device_Id};
+    
+    NSLog(@"params=%@>>>>>>>>>>",params);
+    
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    
+    [SVProgressHUD showWithStatus:@"Logout.."];
+    
+    
+    [manager POST:kServerurl parameters:params progress:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+        
+        
+        [SVProgressHUD dismiss];
+        
+        
+        NSLog(@"Reply JSON: %@", responseObject);
+        
+        if ([responseObject isKindOfClass:[NSDictionary class]]) {
+            
+            UIAlertController* alertcontroller = [UIAlertController alertControllerWithTitle:[responseObject valueForKey:@"msg"]message:nil preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+                                            {
+                                                if([[responseObject valueForKey:@"msg"]isEqualToString:@"Logout successfully"])
+                                                {
+                                                    
+                                                    [[NSUserDefaults standardUserDefaults] setValue:@"Logout"  forKey:@"LoginOrLogout"];
+                                                    
+                                                    [[NSUserDefaults standardUserDefaults] setValue:@"" forKey:@"ArrayInfo"];
+                                                    [[NSUserDefaults standardUserDefaults] synchronize];
+                                                    [self.frostedViewController hideMenuViewController];
+                                                    DEMONavigationController *navigationController = [self.storyboard instantiateViewControllerWithIdentifier:@"contentController"];
+
+                                                    ViewController *Newnavigationvc = [self.storyboard instantiateViewControllerWithIdentifier:@"ViewController"];
+                                                    navigationController.modalTransitionStyle=UIModalTransitionStyleCrossDissolve;
+                                                    [self presentViewController:Newnavigationvc animated:YES completion:nil];
+                                                    
+                                                }
+                                            }];
+            [alertcontroller addAction:defaultAction];
+            [self presentViewController:alertcontroller animated:YES completion:nil];
+            NSLog(@"loginResponse object %@",responseObject);
+            
+        }
+        
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        
+        
+        [SVProgressHUD dismiss];
+        // [SVProgressHUD dismiss];
+        NSLog(@"Error: %@", error);
+    }];
 }
 
 #pragma mark -

@@ -15,7 +15,9 @@
 #import "CHTCollectionViewWaterfallHeader.h"
 #import "CHTCollectionViewWaterfallFooter.h"
 #import "AppDelegate.h"
-
+#import "WebServices.h"
+#import "AFNetworking.h"
+#import "SVProgressHUD.h"
 #import "DEMORootViewController.h"
 #import "DEMONavigationController.h"
 #import "MapViewVC.h"
@@ -62,7 +64,8 @@
     menu.delegatemenu = self;
     [self.view addSubview:menu];
     self.collectionView.alwaysBounceVertical = YES;
-    array_images=[[NSMutableArray alloc]initWithObjects:@"img.png",@"img2.png",@"img3.png",@"img.png",@"img2.png",@"img3.png",@"img.png",@"img2.png",@"img3.png", nil];
+    array_images=[[NSMutableArray alloc]init];
+//    array_images=[[NSMutableArray alloc]initWithObjects:@"img.png",@"img2.png",@"img3.png",@"img.png",@"img2.png",@"img3.png",@"img.png",@"img2.png",@"img3.png", nil];
     cellSizes= [[NSMutableArray alloc]init];
     //btnsetting.hidden=YES;
     //imgicon.hidden=YES;
@@ -70,7 +73,8 @@
     pageValue=0;
     [self.view addSubview:self.collectionView];
     // to get images size by himani
-    [self setupimagearrray];
+//    [self setupimagearrray];
+    [self NewsFeedApi];
     //    [self.view addSubview:view1];
     [super viewDidLoad];
 }
@@ -229,29 +233,43 @@
     _collectionView.dataSource = nil;
 }
 
-
+-(void)NewsFeedApi
+{
+    NSDictionary *params;
+//    user_id,page,filter=my_posts,country,allpublic,time
+    [SVProgressHUD showWithStatus:@"Fetching Posts..."];
+    params = @{@"action":@"wallpost",@"user_id":delegate.userid,@"page":@"0"};
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    [manager POST:kServerurl parameters:params progress:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+        if ([responseObject isKindOfClass:[NSDictionary class]]) {
+            [SVProgressHUD dismiss];
+            NSLog(@"%@responseObject",responseObject);
+            NSArray *parsedObject=[responseObject objectForKey:@"show"];
+            array_images = parsedObject;
+            NSLog(@"%@array_images",array_images);
+            [self setupimagearrray];
+        }
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        
+        [SVProgressHUD dismiss];
+    }];
+    
+    
+}
 - (void)setupimagearrray
 {
     for (NSInteger i = 0; i <array_images.count; i++) {
         // NSString *photoName = [NSString stringWithFormat:@"%ld.jpg",i];
         
-       // NSString *imagestring = [[delegate.imageArray objectAtIndex:i] valueForKey:@"image_large_url"];
-        if(i==0||i==3||i==5)
-        {
-            NSValue *getsize= [NSValue valueWithCGSize:CGSizeMake(200,150)];
-            [cellSizes addObject:getsize];
-        }
-        else
-        {
-            NSValue *getsize= [NSValue valueWithCGSize:CGSizeMake(150,150)];
-            [cellSizes addObject:getsize];
-        }
-    
+        // NSString *imagestring = [[delegate.imageArray objectAtIndex:i] valueForKey:@"image_large_url"];
+        NSValue *getsize= [NSValue valueWithCGSize:CGSizeMake(150,150)];
+        [cellSizes addObject:getsize];
         // UIImage *photo = [UIImage imageNamed:imagestring];
     }
     
-    NSLog(@"cellSizes%@",cellSizes);
     [self.collectionView reloadData];
+    
+    NSLog(@"cellSizes%@",cellSizes);
 
     //NSLog(@"%@",arrayValue);
 }
@@ -262,6 +280,10 @@
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     return [cellSizes[indexPath.item] CGSizeValue];
 }
+
+#pragma mark - CHTCollectionViewDelegateWaterfallLayout
+
+
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
     UICollectionReusableView *reusableView = nil;
     

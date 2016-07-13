@@ -226,6 +226,10 @@ else
 
                                                         delegate.userid=[delegate.logininfo_Array objectForKey:@"user_id"];
                                                         
+                                                        delegate.strshowprofileonmap=[delegate.logininfo_Array objectForKey:@"is_showpofilemap"];
+                                                        
+                                                        delegate.strpushnotificationon=[delegate.logininfo_Array objectForKey:@"is_notification"];
+                                                        
                                                         [[NSUserDefaults standardUserDefaults] setValue:@"Login"  forKey:@"LoginOrLogout"];
                                                         
                                                         [[NSUserDefaults standardUserDefaults] setObject:delegate.logininfo_Array  forKey:@"ArrayInfo"];
@@ -238,6 +242,8 @@ else
                                                 }];
                 [alertcontroller addAction:defaultAction];
                 [self presentViewController:alertcontroller animated:YES completion:nil];
+                NSLog(@"loginResponse object %@",responseObject);
+
             }
         }
         
@@ -383,6 +389,10 @@ else
     RectView.frame=CGRectMake(0, Loginview.frame.origin.y+160, RectView.frame.size.width, RectView.frame.size.height);
     
     pageController.frame=CGRectMake(20, Loginview.frame.origin.y+230, pageController.frame.size.width, pageController.frame.size.height);
+    }
+    else
+    {
+        startbtn.userInteractionEnabled=NO;
     }
 
 }

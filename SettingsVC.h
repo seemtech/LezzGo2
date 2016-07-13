@@ -20,10 +20,10 @@
 
     IBOutlet UILabel *lbl_header;
     BOOL menuopen;
-     NSString *batterypercentage;
+
+
 }
 @property (retain, nonatomic) NSMutableArray *transcripts;
-@property (nonatomic,strong)NSString *batterypercentage;
 
 @property (weak, nonatomic) IBOutlet UITableView *Table;
 @end

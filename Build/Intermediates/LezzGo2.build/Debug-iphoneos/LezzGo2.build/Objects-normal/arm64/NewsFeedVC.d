@@ -18,6 +18,8 @@ dependencies: /Users/apple/Desktop/LezzGo2/NewsFeedVC.m \
   /Users/apple/Desktop/LezzGo2/CHTCollectionViewWaterfallCell.h \
   /Users/apple/Desktop/LezzGo2/CHTCollectionViewWaterfallHeader.h \
   /Users/apple/Desktop/LezzGo2/CHTCollectionViewWaterfallFooter.h \
+  /Users/apple/Desktop/LezzGo2/WebServices.h \
+  /Users/apple/Desktop/LezzGo2/SVProgressHUD.h \
   /Users/apple/Desktop/LezzGo2/LezzGo2/DEMORootViewController.h \
   /Users/apple/Desktop/LezzGo2/LezzGo2/DEMONavigationController.h \
   /Users/apple/Desktop/LezzGo2/LezzGo2/MapViewVC.h \

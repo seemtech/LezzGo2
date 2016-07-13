@@ -61,18 +61,49 @@
 
 #pragma mark -
 #pragma mark Lifecycle
+- (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id<MKOverlay>)overlay
+{
+    
+    MKCircleView *circleView = [[MKCircleView alloc] initWithOverlay:overlay];
+    [circleView setFillColor:[UIColor colorWithRed:140.0/255.0 green:198.0/255.0 blue:63.0/255.0 alpha:1.0]];
+    [circleView setStrokeColor:[UIColor colorWithRed:140.0/255.0 green:198.0/255.0 blue:63.0/255.0 alpha:1.0]];
 
-+ (VPPMapHelper*) VPPMapHelperForMapView:(MKMapView*)mapView 
+    [circleView setAlpha:0.5f];
+    return circleView;
+    
+}
+
+//- (MKOverlayRenderer *) mapView:(MKMapView *)mapView rendererForOverlay:(id)overlay
+//{ if([overlay isKindOfClass:[MKCircle class]])
+//{
+//    MKCircleRenderer* aRenderer = [[MKCircleRenderer
+//                                    alloc]initWithCircle:(MKCircle *)overlay];
+//    
+//    aRenderer.fillColor = [[UIColor blueColor] colorWithAlphaComponent:0.0];
+//    aRenderer.strokeColor = [[UIColor grayColor] colorWithAlphaComponent:0.9];
+//    aRenderer.lineWidth = 2;
+//    aRenderer.lineDashPattern = @[@2, @5];
+//    aRenderer.alpha = 0.5;
+//    
+//    return aRenderer;
+//}
+//else
+//{
+//    return nil;
+//}
+//}
++ (VPPMapHelper*) VPPMapHelperForMapView:(MKMapView*)mapView
                       pinAnnotationColor:(MKPinAnnotationColor)annotationColor 
                    centersOnUserLocation:(BOOL)centersOnUserLocation 
                    showsDisclosureButton:(BOOL)showsDisclosureButton 
                                 delegate:(id<VPPMapHelperDelegate>)delegate {
-	
+
 	// sets up the map
 	VPPMapHelper *mh = [[VPPMapHelper alloc] init];
 	mh->_userPins = [[NSMutableArray alloc] init];
 	// we don't want user's location
 	mh.centersOnUserLocation = centersOnUserLocation;
+    
 	// we want the disclosure button
 	mh.showsDisclosureButton = showsDisclosureButton;
 	// green pins
@@ -84,7 +115,7 @@
 	// MKMapViewDelegate
 	mapView.delegate = [mh retain];
     mh->_unfilteredPins = [[NSMutableArray alloc] init];
-    mh->_currentZoom = -1;
+    mh->_currentZoom = 0;
     mh->userCanDropPin = NO;
 	
 	// adds longpress gesture recognizer
@@ -99,7 +130,8 @@
                               forKeyPath:@"location"  
                                  options:(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld)  
                                  context:NULL];
-	
+   
+    
 	return [mh autorelease];
 }
 
@@ -582,7 +614,8 @@
     // annotation must have an image instead of pin icon
     if ([annotation conformsToProtocol:@protocol(VPPMapCustomAnnotation)] 
         && [annotation respondsToSelector:@selector(image)]
-        && ((id<VPPMapCustomAnnotation>)annotation).image != nil) {
+        && ((id<VPPMapCustomAnnotation>)annotation).image != nil)
+    {
         static NSString *imageLocationAnnotationIdentifier = @"ImageMapAnnotationIdentifier"; 
         MKPinAnnotationView *imagePinView = (MKPinAnnotationView *)[theMapView dequeueReusableAnnotationViewWithIdentifier:imageLocationAnnotationIdentifier];
         
@@ -671,7 +704,7 @@
                        context:(void *)context {  
     
     if (self.centersOnUserLocation) {  
-        [self centerMap];
+       // [self centerMap];
     }
 }
 
@@ -703,7 +736,7 @@
 	}
 	
 	else if ([self.mapView.annotations count] > 1) {	
-		region = [self regionAccordingToAnnotations:self.mapView.annotations];
+		//region = [self regionAccordingToAnnotations:self.mapView.annotations];
     }
 	
 	else if ([self.mapView.annotations count] == 1) {
@@ -769,10 +802,10 @@
 	
     if (self.shouldClusterPins) {
         [_unfilteredPins removeAllObjects];
-        [self.mapView setRegion:[self regionAccordingToAnnotations:mapAnnotations] animated:YES];	
+        //[self.mapView setRegion:[self regionAccordingToAnnotations:mapAnnotations] animated:YES];
     }
     else {
-        [self centerMap];
+        //[self centerMap];
     }
 }
 

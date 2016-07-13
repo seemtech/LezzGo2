@@ -65,7 +65,6 @@
     NSLog(@"locationManager didUpdateLocations: %@",locations);
     
     for (int i = 0; i < locations.count; i++) {
-        
         CLLocation * newLocation = [locations objectAtIndex:i];
         CLLocationCoordinate2D theLocation = newLocation.coordinate;
         CLLocationAccuracy theAccuracy = newLocation.horizontalAccuracy;
@@ -118,8 +117,8 @@
                        
 //                       dele.countrycode = placemark.ISOcountryCode;
                        
-                       dele.currentLat= [NSString stringWithFormat:@"%.8f", self.myLocation.latitude];
-                       dele.currentLong= [NSString stringWithFormat:@"%.8f", self.myLocation.longitude];
+                       dele.currentLat= [NSString stringWithFormat:@"%f", self.myLocation.latitude];
+                       dele.currentLong= [NSString stringWithFormat:@"%f", self.myLocation.longitude];
                        
                        dele.User_countryName=[address lastObject];
                        NSString *str=[[NSUserDefaults standardUserDefaults]valueForKey:@"LoginOrLogout"];

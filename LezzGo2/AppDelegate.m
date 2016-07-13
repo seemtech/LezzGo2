@@ -25,7 +25,7 @@
     CLPlacemark *placemark;
     
 }
-@synthesize strCheckTemp,User_id,rangesliderDic,strResetMatch,strChatUsername,AddressString,truncatedString,countrycode,userid,showlefticon,userlogout;
+@synthesize strCheckTemp,User_id,rangesliderDic,strResetMatch,strChatUsername,AddressString,truncatedString,countrycode,userid,showlefticon,userlogout,strshowprofileonmap,strpushnotificationon;
 
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
@@ -142,6 +142,9 @@
         NSMutableDictionary *array=[[[NSUserDefaults standardUserDefaults]valueForKey:@"ArrayInfo"]mutableCopy];
         self.logininfo_Array=array;
        userid=[self.logininfo_Array objectForKey:@"user_id"];
+        strshowprofileonmap=[self.logininfo_Array objectForKey:@"is_showpofilemap"];
+        
+        strpushnotificationon=[self.logininfo_Array objectForKey:@"is_notification"];
         UIStoryboard *storyboard=[UIStoryboard storyboardWithName:@"Main" bundle: nil];
         DEMORootViewController  *obj = [storyboard instantiateViewControllerWithIdentifier:@"rootController"];
         self.window.rootViewController=obj;

@@ -22,10 +22,18 @@
     IBOutlet UIView *mainview;
 
     IBOutlet UIImageView *mainimage;
-    
+    float   animatedDistance;
+
     IBOutlet UITextView *descriptiontxt;
+    NSString *strpublic;
+    IBOutlet UISwitch *publicswitch;
+
 
 }
+@property(nonatomic,retain)IBOutlet UISwitch *publicswitch;
+
+@property(nonatomic,retain)NSString *strpublic;
+
 @property(nonatomic,retain)IBOutlet UITextView *descriptiontxt;
 
 @property(nonatomic,retain)IBOutlet UIImageView *mainimage;

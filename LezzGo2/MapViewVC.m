@@ -106,6 +106,7 @@
     delegate =(AppDelegate*)[UIApplication sharedApplication].delegate;
     allusersresponse=[[NSMutableArray alloc]init];
     delegate.showlefticon=0;
+    self.shareModel = [LocationManager sharedManager];
 
     MSMenuView *menu=[[MSMenuView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height-53, self.view.frame.size.width, 53)];
     menu.selecttag=1;
@@ -120,10 +121,6 @@
         [self NearestUsersApi];
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-}
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent* )event
-{
-    customcalloutview.hidden = YES;
 }
 
 -(void)MapBtnClick
@@ -191,7 +188,6 @@
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     
     [manager POST:kServerurl parameters:params progress:nil success:^(NSURLSessionDataTask *task, id responseObject) {
-        
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
             [SVProgressHUD dismiss];
             NSLog(@"responseObjectresponseObject=%@",responseObject);
@@ -201,29 +197,85 @@
                                   centersOnUserLocation:NO
                                   showsDisclosureButton:YES
                                                delegate:self] retain];
-            self.mapView.showsUserLocation = YES;
+            _mh.mapView.showsUserLocation = YES;
             _mh.userCanDropPin = YES;
             _mh.allowMultipleUserPins = YES;
             _mh.pinDroppedByUserClass = [MapAnnotationExample class];
-            
+           // CLLocationCoordinate2D center= {28.617714,77.387774};
+            NSLog(@"loginResponse object %f %f",self.shareModel.myLocation.latitude,self.shareModel.myLocation.longitude);
 
+//           CLLocationCoordinate2D center= {self.shareModel.myLocation.latitude,self.shareModel.myLocation.longitude};
+//            
+//             //       CLLocationCoordinate2D center= {_mh.mapView.centerCoordinate.latitude,_mh.mapView.centerCoordinate.longitude};
+//
+//            
+//            // Add an overlay
+//circle= [MKCircle circleWithCenterCoordinate:center radius:10000];
+
+            //your distance like 20000(like meters)
+           //[_mh.mapView addOverlay:circle];
+            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
+                                           initWithTarget:self
+                                           action:@selector(longpressToGetLocation:)];
             
-        
+            [_mh.mapView addGestureRecognizer:tap];
             [self tonsOfPins];
             [_mh release];
-
-            
             NSLog(@"loginResponse object %@",responseObject);
-            
         }
-        
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        
-        
         [SVProgressHUD dismiss];
         NSLog(@"Error: %@", error);
     }];
+}
+
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    customcalloutview.hidden = YES;
+
+//    for (UITouch *touch in touches){
+//        
+//        [_mh.mapView removeOverlay:circle];
+//        CGPoint pt = [touch  locationInView:_mh.mapView];
+//        CLLocationCoordinate2D coord= [_mh.mapView convertPoint:pt toCoordinateFromView:_mh.mapView];
+////        CLLocationCoordinate2D center= {_mh.mapView.centerCoordinate.latitude,_mh.mapView.centerCoordinate.longitude};
+//      
+//        double miles = 1.0;
+//        double scalingFactor = ABS( (cos(2 * M_PI * coord.latitude / 360.0) ));
+//        
+//        MKCoordinateSpan span;
+//        
+//        span.latitudeDelta = miles/69.0;
+//        span.longitudeDelta = miles/(scalingFactor * 69.0);
+//        
+//        MKCoordinateRegion region;
+//        region.span = span;
+//        region.center = coord;
+//        
+//        [_mh.mapView setRegion:region animated:YES];
+//        //your distance like 20000(like meters)
+//    }
+}
+- (void)longpressToGetLocation:(UITapGestureRecognizer *)gestureRecognizer
+{
+  
+    [_mh.mapView removeOverlay:circle];
+    CGPoint touchPoint = [gestureRecognizer locationInView:_mh.mapView];
+    CLLocationCoordinate2D location =
+    [_mh.mapView convertPoint:touchPoint toCoordinateFromView:_mh.mapView];
+    circle = [MKCircle circleWithCenterCoordinate:location radius:5000];
+    [_mh.mapView addOverlay:circle];
     
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(location, 10000, 10000);
+    [mapView setRegion:region animated:YES];
+    
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:1];
+    [UIView commitAnimations];
+    
+    
+    NSLog(@"Location found from Map: %f %f",location.latitude,location.longitude);
     
 }
 -(IBAction)filterbtn:(id)sender
@@ -233,27 +285,25 @@ FilterVC *secondViewController = [self.storyboard instantiateViewControllerWithI
 secondViewController.modalTransitionStyle=UIModalTransitionStyleCrossDissolve;
 [self presentViewController:secondViewController animated:YES completion:nil];
 }
-- (void) tonsOfPins {
+
+-(void) tonsOfPins
+{
     srand((unsigned)time(0));
-    
     NSMutableArray *tempPlaces=[[NSMutableArray alloc] initWithCapacity:0];
-    for (int i = 0; i < allusersresponse.count; i++) {
-        
+    for (int i = 0; i < allusersresponse.count; i++)
+    {
         NSMutableDictionary *dic=[allusersresponse objectAtIndex:i];
         NSLog(@"%@dicdic",dic);
         MapAnnotationExample *place= [[MapAnnotationExample alloc] init];
-
         place.coordinate = CLLocationCoordinate2DMake([[dic valueForKey:@"latitude"] doubleValue],[[dic valueForKey:@"longitude"]doubleValue]);
         [place setUsername:[dic valueForKey:@"full_name"]];
         [place setUserage:[dic valueForKey:@"age"]];
         [place setUserid:[dic valueForKey:@"user_id"]];
         [place setLikestatus:[dic valueForKey:@"like_status"]];
-
         [place setPosttext:[dic valueForKey:@"post_title"]];
         [place setImageurl:[dic valueForKey:@"profile_pic"]];
         [place setTitle:[dic valueForKey:@"full_name"]];
         place.indextag=[NSString stringWithFormat:@"%i",i];
-
         [tempPlaces addObject:place];
         [place release];
         

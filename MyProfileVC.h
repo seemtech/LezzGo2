@@ -33,8 +33,12 @@
     CGFloat width;
     int pageValue;
     NSInteger arrayValue;
+    IBOutlet UIScrollView *mainscroll;
+
     
 }
+@property(nonatomic,strong)IBOutlet UIScrollView *mainscroll;
+
 @property(nonatomic,strong)IBOutlet UIImageView *Btnpostselectimage;
 @property(nonatomic,strong)IBOutlet UIImageView *Btndetailsselectimage;
 @property(nonatomic,strong)IBOutlet UIButton *Bthpost;

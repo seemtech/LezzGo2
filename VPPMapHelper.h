@@ -59,6 +59,7 @@
 #import <MapKit/MapKit.h>
 #import "VPPMapHelperDelegate.h"
 #import <UIKit/UIKit.h>
+#import "AppDelegate.h"
 
 // specifies initial zoom, used when no mapRegionSpan property is defined
 #define kVPPMapHelperLongitudeDelta 0.08f
@@ -68,10 +69,10 @@
 @interface VPPMapHelper : NSObject <MKMapViewDelegate> {
 @private
 	NSMutableArray *_userPins;
-    
+
     NSMutableArray *_unfilteredPins;
     NSMutableArray *_pinsToRemove;
-    
+
     float _currentZoom;
 }
 
@@ -91,6 +92,7 @@
 
 
 
+@property (nonatomic, strong) AppDelegate *delegatenew;
 
 
 /** ---

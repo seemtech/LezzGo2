@@ -28,10 +28,17 @@
     NSString *userid;
     
     int showlefticon;
+    NSString *strshowprofileonmap;
+    
+    NSString *strpushnotificationon;
 
     
     
 }
+@property(nonatomic,retain)NSString *strshowprofileonmap;
+
+@property(nonatomic,retain)NSString *strpushnotificationon;
+
 @property    int showlefticon;
 
 @property(nonatomic,retain)NSString *userid;

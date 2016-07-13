@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B4FB9D11D35002B00D2B3F1 /* AboutAppVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B4FB9D01D35002B00D2B3F1 /* AboutAppVC.m */; };
+		0B4FB9D41D35165A00D2B3F1 /* EditAccountVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B4FB9D31D35165A00D2B3F1 /* EditAccountVC.m */; };
 		1806851B1D2BA49C00A8E9D6 /* SVRadialGradientLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 180685131D2BA49C00A8E9D6 /* SVRadialGradientLayer.m */; };
 		1806851C1D2BA49C00A8E9D6 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 180685151D2BA49C00A8E9D6 /* SVProgressHUD.m */; };
 		1806851D1D2BA49C00A8E9D6 /* SVProgressAnimatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 180685171D2BA49C00A8E9D6 /* SVProgressAnimatedView.m */; };
@@ -248,6 +250,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0B4FB9CF1D35002B00D2B3F1 /* AboutAppVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutAppVC.h; sourceTree = "<group>"; };
+		0B4FB9D01D35002B00D2B3F1 /* AboutAppVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutAppVC.m; sourceTree = "<group>"; };
+		0B4FB9D21D35165A00D2B3F1 /* EditAccountVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditAccountVC.h; sourceTree = "<group>"; };
+		0B4FB9D31D35165A00D2B3F1 /* EditAccountVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditAccountVC.m; sourceTree = "<group>"; };
 		180685121D2BA49C00A8E9D6 /* SVRadialGradientLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVRadialGradientLayer.h; sourceTree = "<group>"; };
 		180685131D2BA49C00A8E9D6 /* SVRadialGradientLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVRadialGradientLayer.m; sourceTree = "<group>"; };
 		180685141D2BA49C00A8E9D6 /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
@@ -773,6 +779,8 @@
 		188275B31D1D309200373122 = {
 			isa = PBXGroup;
 			children = (
+				0B4FB9D21D35165A00D2B3F1 /* EditAccountVC.h */,
+				0B4FB9D31D35165A00D2B3F1 /* EditAccountVC.m */,
 				18BD90BB1D2A9D4F0070F55E /* AddPost */,
 				18DEA4361D2A6D1900ACB3C7 /* MyProfile */,
 				18DEA4321D2A678C00ACB3C7 /* UserProfile */,
@@ -808,6 +816,8 @@
 		188275BE1D1D309200373122 /* LezzGo2 */ = {
 			isa = PBXGroup;
 			children = (
+				0B4FB9CF1D35002B00D2B3F1 /* AboutAppVC.h */,
+				0B4FB9D01D35002B00D2B3F1 /* AboutAppVC.m */,
 				188275C51D1D309200373122 /* ViewController.h */,
 				188275C61D1D309200373122 /* ViewController.m */,
 				1896F3311D2101DF00396A63 /* CreateAccountVC.h */,
@@ -1354,6 +1364,7 @@
 				18462F621D2532000067648E /* CHTCollectionViewWaterfallFooter.m in Sources */,
 				18462EAD1D2508C60067648E /* SDWebImageDecoder.m in Sources */,
 				18462EF51D2528A80067648E /* HPGrowingTextView.m in Sources */,
+				0B4FB9D11D35002B00D2B3F1 /* AboutAppVC.m in Sources */,
 				18B229181D2258F7003C061F /* UIView+REFrostedViewController.m in Sources */,
 				1896F4371D213B4100396A63 /* FinalSignupVC.m in Sources */,
 				1870BBE61D2505C00015FCEF /* Reachability.m in Sources */,
@@ -1370,6 +1381,7 @@
 				18462F531D252FF60067648E /* AFURLResponseSerialization.m in Sources */,
 				188275C11D1D309200373122 /* main.m in Sources */,
 				18B2293E1D226145003C061F /* MapAnnotationExample.m in Sources */,
+				0B4FB9D41D35165A00D2B3F1 /* EditAccountVC.m in Sources */,
 				18462EAE1D2508C60067648E /* SDWebImageDownloader.m in Sources */,
 				18462EC81D2518560067648E /* FriendsVC.m in Sources */,
 				18462EB51D2508C60067648E /* UIImage+WebP.m in Sources */,

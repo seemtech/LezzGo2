@@ -20,10 +20,13 @@
     NSMutableArray *allusersresponse;
     IBOutlet UIView * customcalloutview;
     NSString *indexIs;
+    MKCircle *circle;
 
 @private
 VPPMapHelper *_mh;
 }
+@property (strong,nonatomic) LocationManager * shareModel;
+
 @property (nonatomic, retain) IBOutlet MKMapView *mapView;
 @property (nonatomic, retain)IBOutlet UIView * customcalloutview;
 

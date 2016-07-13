@@ -19,14 +19,21 @@
 #import "CHTCollectionViewWaterfallCell.h"
 #import "CHTCollectionViewWaterfallHeader.h"
 #import "DEMONavigationController.h"
-
+#import "WebServices.h"
+#import "AFNetworking.h"
+#import "SVProgressHUD.h"
 #import "CHTCollectionViewWaterfallFooter.h"
 @interface AddPostVC ()
 
 @end
 
 @implementation AddPostVC
-@synthesize Photoview,TextbottomView,mainview,mainimage,descriptiontxt;
+static const CGFloat KEYBOARD_ANIMATION_DURATION = 0.3;
+static const CGFloat MINIMUM_SCROLL_FRACTION = 0.2;
+static const CGFloat MAXIMUM_SCROLL_FRACTION = 0.8;
+static const CGFloat PORTRAIT_KEYBOARD_HEIGHT = 210;
+static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
+@synthesize Photoview,TextbottomView,mainview,mainimage,descriptiontxt,strpublic,publicswitch;
 -(IBAction)photobtnclick:(id)sender
 {
     UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel"  destructiveButtonTitle:nil otherButtonTitles:@"Take Photo", @"Choose Existing", nil];
@@ -64,7 +71,8 @@
                                    action:@selector(dismissKeyboard)];
     
     [self.view addGestureRecognizer:tap];
-    
+    [publicswitch addTarget:self action:@selector(switchChanged: ) forControlEvents:UIControlEventValueChanged];
+
     
     
     Photoview.hidden=YES;
@@ -101,8 +109,96 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 }
+-(void)AddPostApi
+{
+    [self dismissKeyboard];
+    NSDictionary *params;
+    [SVProgressHUD showWithStatus:@"Posting..."];
 
-
+    //username , full_name , age , password  ,email , zip_code , profile_pic , latitude , longitude
+    // action=registration
+    NSLog(@"params=%@>>>>>>>>>>",params);
+    //user_id , full_name , age , password , is_showpofilemap , is_notification
+    
+    params = @{@"action":@"profilesetting",@"user_id":delegate.userid,@"text":descriptiontxt.text,@"privacy":strpublic};
+    
+    NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] multipartFormRequestWithMethod:@"POST" URLString:kServerurl parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        [request setTimeoutInterval:1000000000000000];
+        
+        if (mainimage.image != nil) {
+            NSString *names =[NSString stringWithFormat:@"picture"];
+            NSString *imgname = [NSString stringWithFormat:@"image.jpeg"];
+            [formData appendPartWithFileData:UIImageJPEGRepresentation(mainimage.image, 0.5)
+                                        name:names
+                                    fileName:imgname
+                                    mimeType:@"png/jpeg"];
+        }
+        
+    } error:nil];
+    
+    AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    
+    [SVProgressHUD showWithStatus:@"Updating..."];
+    
+    
+    NSURLSessionUploadTask *uploadTask;
+    uploadTask = [manager
+                  uploadTaskWithStreamedRequest:request
+                  progress:^(NSProgress * _Nonnull uploadProgress) {
+                      // This is not called back on the main queue.
+                      // You are responsible for dispatching to the main queue for UI updates
+                      dispatch_async(dispatch_get_main_queue(), ^{
+                          //Update the progress view
+                          
+                          //progressDouble = uploadProgress.fractionCompleted;
+                          //[self updateProgress:progressDouble];
+                      });
+                  }
+                  completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+                      NSLog(@"Response object %@",responseObject);
+                      
+                      if (error) {
+                          
+                          [SVProgressHUD dismiss];
+                          NSLog(@"Error: %@", error);
+                          
+                          
+                      } else {
+                          
+                          
+                          [SVProgressHUD dismiss];
+                          NSLog(@"Uploaded successfilly.....%@ %@", response, responseObject);
+                          //                              NSString * str = [responseObject valueForKey:@"msg"];
+                          //{"msg":"Profile updated"}
+                          UIAlertController* alertcontroller = [UIAlertController alertControllerWithTitle:[responseObject objectForKey:@"msg"]message:nil preferredStyle:UIAlertControllerStyleAlert];
+                          UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+                                                          {
+                                                            
+                                                          }];
+                          [alertcontroller addAction:defaultAction];
+                          [self presentViewController:alertcontroller animated:YES completion:nil];
+                          
+                      }
+                  }];
+    
+    [uploadTask resume];
+    
+    
+    
+}
+- (void) switchChanged:(UISwitch *)sender {
+    
+        if(sender.on==YES)
+        {
+            strpublic=@"public";
+        }
+        else
+        {
+            strpublic=@"private";
+            
+        }
+    
+}
 #pragma mark - UIActionSheetDelegate methods
 
 // Override this method to know if user wants to take a new photo or select from the photo library
@@ -354,6 +450,57 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)textViewDidBeginEditing:(UITextView *)textView
+{
+    [self slideViewUpForTextView:textView];
+}
+-(void) textViewDidEndEditing:(UITextView *)textView
+{
+    // The return animation is far simpler since we've saved the amount to animate.
+    CGRect viewFrame = self.view.frame;
+    viewFrame.origin.y += animatedDistance;
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:KEYBOARD_ANIMATION_DURATION];
+    
+    [self.view setFrame:viewFrame];
+    [UIView commitAnimations];
+    
+}
+- (void) slideViewUpForTextView:(UITextView *)textView
+{
+    CGRect textFieldRect = [self.view convertRect:textView.bounds fromView:textView];
+    CGRect viewRect = [self.view convertRect:self.view.bounds fromView:self.view];
+    CGFloat midline = textFieldRect.origin.y + 3.0 * textFieldRect.size.height;
+    CGFloat numerator =	midline - viewRect.origin.y	- MINIMUM_SCROLL_FRACTION * viewRect.size.height;
+    CGFloat denominator = (MAXIMUM_SCROLL_FRACTION - MINIMUM_SCROLL_FRACTION) * viewRect.size.height;
+    CGFloat heightFraction = numerator / denominator;
+    
+    if (heightFraction < 0.0)
+        heightFraction = 0.0;
+    else if (heightFraction > 1.0)
+        heightFraction = 1.0;
+    
+    UIInterfaceOrientation orientation =
+    [[UIApplication sharedApplication] statusBarOrientation];
+    if (orientation == UIInterfaceOrientationPortrait || orientation == UIInterfaceOrientationPortraitUpsideDown)
+        animatedDistance = floor(PORTRAIT_KEYBOARD_HEIGHT * heightFraction);
+    else
+        animatedDistance = floor(LANDSCAPE_KEYBOARD_HEIGHT * heightFraction);
+    
+    CGRect viewFrame = self.view.frame;
+    viewFrame.origin.y -= animatedDistance;
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:KEYBOARD_ANIMATION_DURATION];
+    
+    [self.view setFrame:viewFrame];
+    
+    [UIView commitAnimations];
 }
 
 /*

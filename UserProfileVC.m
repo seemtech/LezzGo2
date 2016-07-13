@@ -49,7 +49,10 @@
     array_images=[[NSMutableArray alloc]initWithObjects:@"img.png",@"img2.png",@"img3.png",@"img.png",@"img2.png",@"img3.png",@"img.png",@"img2.png",@"img3.png", nil];
     cellSizes= [[NSMutableArray alloc]init];
     
-    [self.view addSubview:self.collectionView];
+    mainscroll.backgroundColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg-grey.png"]];
+    
+    [mainscroll addSubview:self.collectionView];
+
     [self setupimagearrray];
     [self UserDetailsApi];
     [super viewDidLoad];
@@ -159,7 +162,7 @@
         
         if (screenHeight==480)
         {
-            _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,335, 320, self.view.frame.size.height-335)   collectionViewLayout:layout];
+            _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,335-64, 320, self.view.frame.size.height)   collectionViewLayout:layout];
             _collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
             _collectionView.dataSource = self;
             _collectionView.delegate = self;
@@ -177,7 +180,7 @@
         
         else if (screenHeight==667)
         {
-            _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,335, 320, self.view.frame.size.height-335)    collectionViewLayout:layout];
+            _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,335-64, 320, self.view.frame.size.height)    collectionViewLayout:layout];
             _collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
             _collectionView.dataSource = self;
             _collectionView.delegate = self;
@@ -194,7 +197,7 @@
         }
         else if (screenHeight>667&&screenHeight<1024)
         {
-            _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,335, 320, self.view.frame.size.height-335)   collectionViewLayout:layout];
+            _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,335-64, 320, self.view.frame.size.height)   collectionViewLayout:layout];
             _collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
             _collectionView.dataSource = self;
             _collectionView.delegate = self;
@@ -210,7 +213,7 @@
         }
         else
         {
-            _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,335, 320, self.view.frame.size.height-335)    collectionViewLayout:layout];
+            _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,335-64, 320, self.view.frame.size.height)    collectionViewLayout:layout];
             _collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
             _collectionView.dataSource = self;
             _collectionView.delegate = self;
@@ -264,7 +267,11 @@
     
     NSLog(@"cellSizes%@",cellSizes);
     [self.collectionView reloadData];
-    
+    CGRect frame2=self.collectionView.frame;
+    frame2.size.height=150*array_images.count;
+    self.collectionView.frame=frame2;
+    mainscroll.contentSize=CGSizeMake(self.view.frame.size.width,self.collectionView.frame.size.height);
+
     //NSLog(@"%@",arrayValue);
 }
 

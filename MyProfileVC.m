@@ -29,7 +29,7 @@
 @end
 
 @implementation MyProfileVC
-@synthesize PROFILEVIEW,Bthpost,BthDetails,Btnpostselectimage,Btndetailsselectimage;
+@synthesize PROFILEVIEW,Bthpost,BthDetails,Btnpostselectimage,Btndetailsselectimage,mainscroll;
 #define CELL_IDENTIFIER3 @"WaterfallCell"
 #define HEADER_IDENTIFIER3 @"WaterfallHeader"
 #define FOOTER_IDENTIFIER3 @"WaterfallFooter"
@@ -59,11 +59,11 @@
     self.collectionView.alwaysBounceVertical = YES;
     array_images=[[NSMutableArray alloc]initWithObjects:@"img.png",@"img2.png",@"img3.png",@"img.png",@"img2.png",@"img3.png",@"img.png",@"img2.png",@"img3.png", nil];
     cellSizes= [[NSMutableArray alloc]init];
-    
-    [self.view addSubview:self.collectionView];
+    mainscroll.backgroundColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg-grey.png"]];
+
+    [mainscroll addSubview:self.collectionView];
     [self setupimagearrray];
     [self MyProfileDetailsApi];
-
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 }
@@ -85,6 +85,8 @@
             [SVProgressHUD dismiss];
             
             NSLog(@"loginResponse object %@",responseObject);
+            delegate.logininfo_Array=[responseObject valueForKey:@"show"];
+
             
         }
         
@@ -182,7 +184,7 @@
         
         if (screenHeight==480)
         {
-            _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,381, 320, self.view.frame.size.height-381-64)    collectionViewLayout:layout];
+            _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,381-64, 320, self.view.frame.size.height)    collectionViewLayout:layout];
             _collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
             _collectionView.dataSource = self;
             _collectionView.delegate = self;
@@ -200,7 +202,7 @@
         
         else if (screenHeight==667)
         {
-            _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,381, 320, self.view.frame.size.height-381-64)    collectionViewLayout:layout];
+            _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,381-64, 320, self.view.frame.size.height)    collectionViewLayout:layout];
             _collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
             _collectionView.dataSource = self;
             _collectionView.delegate = self;
@@ -217,7 +219,7 @@
         }
         else if (screenHeight>667&&screenHeight<1024)
         {
-            _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,381, 320, self.view.frame.size.height-381-64)    collectionViewLayout:layout];
+            _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,381-64, 320, self.view.frame.size.height)    collectionViewLayout:layout];
             _collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
             _collectionView.dataSource = self;
             _collectionView.delegate = self;
@@ -233,7 +235,7 @@
         }
         else
         {
-            _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,381, 320, self.view.frame.size.height-381-64)    collectionViewLayout:layout];
+            _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0,381-64, 320, self.view.frame.size.height)    collectionViewLayout:layout];
             _collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
             _collectionView.dataSource = self;
             _collectionView.delegate = self;
@@ -287,7 +289,11 @@
     
     NSLog(@"cellSizes%@",cellSizes);
     [self.collectionView reloadData];
-    
+    CGRect frame2=self.collectionView.frame;
+    frame2.size.height=150*array_images.count;
+    self.collectionView.frame=frame2;
+    mainscroll.contentSize=CGSizeMake(self.view.frame.size.width,self.collectionView.frame.size.height);
+
     //NSLog(@"%@",arrayValue);
 }
 

@@ -77,7 +77,10 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
                                                     delegate.logininfo_Array=[responseObject valueForKey:@"show"];
 
                                                 delegate.userid=[delegate.logininfo_Array objectForKey:@"user_id"];
+                                                    delegate.strshowprofileonmap=[delegate.logininfo_Array objectForKey:@"is_showpofilemap"];
                                                     
+                                                    delegate.strpushnotificationon=[delegate.logininfo_Array objectForKey:@"is_notification"];
+
                                                     [[NSUserDefaults standardUserDefaults] setValue:@"Login"  forKey:@"LoginOrLogout"];
                                                     
                                                     [[NSUserDefaults standardUserDefaults] setObject:delegate.logininfo_Array  forKey:@"ArrayInfo"];
